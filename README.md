@@ -30,13 +30,13 @@ Polar Oceans in a Changing Climate
 
 #### Training material
 
--[Pangeo Tutorial for the eScience Course 2022](https://pangeo-data.github.io/escience-2022/intro.html)
+- [Pangeo Tutorial for the eScience Course 2022](https://pangeo-data.github.io/escience-2022/intro.html)
 
--Introduction to python links for the newbies:
-a. https://aaltoscicomp.github.io/python-for-scicomp/
-b. https://nordicesmhub.github.io/Norway_Sweden_training/pangeo/intro.html
-c. http://gallery.pangeo.io/repos/pangeo-gallery/cmip6/index.html#
-d. https://rabernat.github.io/research_computing_2018/category/lectures.html
+- Introduction to python links for the newbies:
+    - https://aaltoscicomp.github.io/python-for-scicomp/
+    - https://nordicesmhub.github.io/Norway_Sweden_training/pangeo/intro.html
+    - http://gallery.pangeo.io/repos/pangeo-gallery/cmip6/index.html#
+    - https://rabernat.github.io/research_computing_2018/category/lectures.html
 
 
 - [Git Introduction to version control](https://coderefinery.github.io/git-intro/)
