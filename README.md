@@ -1,6 +1,6 @@
 # eScience Course 2022 - Group 4
 
-## Polar Oceans in a Changing Climate
+Polar Oceans in a Changing Climate
 
 
 ### Contents
@@ -9,19 +9,18 @@
 
 ### Git
 
-1. Open a JupyterLab session on the system you plan to use.  
-https://pangeo-eosc.vm.fedcloud.eu/jupyterhub/
+1. Open a Jupyter hub session on pangeo : https://pangeo-eosc.vm.fedcloud.eu/jupyterhub/
 
-1. Generate ssh key on pangeo jupyterhub with terminal and add it to your github account :
+1. Generate ssh key on pangeo with terminal of jupyterhub and add it to your github account :
 [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 
-2. Clone with github extension using ssh : git@github.com:eScience-course/Tjaernoe2022-group4.git
+1. Clone with github extension using ssh : git@github.com:eScience-course/Tjaernoe2022-group4.git
 
 1. Now you are ready to work ;-) 
 
 
 
-
+-----------------------------------------------------------
 
 #### Extra
 
