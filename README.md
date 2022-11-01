@@ -21,8 +21,8 @@ Polar Oceans in a Changing Climate
 
 1. To push you need to configure Git, in particular set your user name and email address, from the terminal :
 
-    > $ git config --global user.name "Your Name"
-    > $ git config --global user.email yourname@example.com
+         $ git config --global user.name "Your Name"
+         $ git config --global user.email yourname@example.com
 
 
 
