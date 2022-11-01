@@ -8,7 +8,7 @@ Polar Oceans in a Changing Climate
 1. `notebooks`: a place for storing Jupyter Notebooks.  
 
 
-### Git
+### Getting started
 
 1. Open a Jupyter hub session on pangeo : https://pangeo-eosc.vm.fedcloud.eu/jupyterhub/
 
@@ -21,14 +21,13 @@ Polar Oceans in a Changing Climate
 
 1. To push you need to configure Git, in particular set your user name and email address, from the terminal :
 
-    $ git config --global user.name "Your Name"
-    $ git config --global user.email yourname@example.com
+    > $ git config --global user.name "Your Name"
+    > $ git config --global user.email yourname@example.com
 
 
-----------------------------------------------------------
 
 
-#### Training material
+### Training material
 
 - [Pangeo Tutorial for the eScience Course 2022](https://pangeo-data.github.io/escience-2022/intro.html)
 
@@ -41,7 +40,7 @@ Polar Oceans in a Changing Climate
 
 - [Git Introduction to version control](https://coderefinery.github.io/git-intro/)
 - [Collaborative distributed version control](https://coderefinery.github.io/git-collaborative/)
-- [Setup Git from JupyterLab Terminal](https://coderefinery.github.io/git-refresher/01-setup/#configuring-git)
+
 - [xESMF: Universal Regridder for Geospatial Data](https://pangeo-xesmf.readthedocs.io/en/latest/)
 
 
