@@ -7,6 +7,7 @@ Polar Oceans in a Changing Climate
 
 1. `notebooks`: a place for storing Jupyter Notebooks.  
 
+
 ### Git
 
 1. Open a Jupyter hub session on pangeo : https://pangeo-eosc.vm.fedcloud.eu/jupyterhub/
@@ -14,9 +15,34 @@ Polar Oceans in a Changing Climate
 1. Generate ssh key on pangeo with terminal of jupyterhub and add it to your github account :
 [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 
-1. Clone with github extension using ssh : git@github.com:eScience-course/Tjaernoe2022-group4.git
+1. Clone with github extension using ssh : `git@github.com:eScience-course/Tjaernoe2022-group4.git`
 
 1. Now you are ready to work ;-) 
+
+1. To push you need to configure Git, in particular set your user name and email address, from the terminal :
+
+    $ git config --global user.name "Your Name"
+    $ git config --global user.email yourname@example.com
+
+
+----------------------------------------------------------
+
+
+#### Training material
+
+-[Pangeo Tutorial for the eScience Course 2022](https://pangeo-data.github.io/escience-2022/intro.html)
+
+-Introduction to python links for the newbies:
+a. https://aaltoscicomp.github.io/python-for-scicomp/
+b. https://nordicesmhub.github.io/Norway_Sweden_training/pangeo/intro.html
+c. http://gallery.pangeo.io/repos/pangeo-gallery/cmip6/index.html#
+d. https://rabernat.github.io/research_computing_2018/category/lectures.html
+
+
+- [Git Introduction to version control](https://coderefinery.github.io/git-intro/)
+- [Collaborative distributed version control](https://coderefinery.github.io/git-collaborative/)
+- [Setup Git from JupyterLab Terminal](https://coderefinery.github.io/git-refresher/01-setup/#configuring-git)
+- [xESMF: Universal Regridder for Geospatial Data](https://pangeo-xesmf.readthedocs.io/en/latest/)
 
 
 
@@ -47,3 +73,5 @@ Creating [Research Object](https://youtu.be/w39xvNrqTR8) increases significantly
 **The Environmental Data Science Book**
 
 [The Environmental Data Science book](https://the-environmental-ds-book.netlify.app/welcome.html) is a living, open and community-driven online resource to showcase and support the publication of data, research and open-source tools for collaborative, reproducible and transparent Environmental Data Science. An executable Research Object is created for each Jupyter Notebook deposited to the Environmental Data Science book.
+
+
