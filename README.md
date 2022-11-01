@@ -1,42 +1,38 @@
-# eScience Course 2022 Project Template
+# eScience Course 2022 - Group 4
 
-[This template](https://github.com/eScience-course/escience2022-template) provides a starting point for [eScience Course](https://www.aces.su.se/research/projects/escience-tools-in-climate-science-linking-observations-with-modelling/) work groups.
+## Polar Oceans in a Changing Climate
 
-### What's included?
+
+### Contents
 
 1. `notebooks`: a place for storing Jupyter Notebooks.  
-1. `README.md`: this document - consider modifying to make it a description of your project on GitHub.
-1. `LICENSE`: a default (MIT) license file for your project. You can change this if you feel the need.
 
-### How to use this Template
-
-Project leads should follow the next four steps. This only needs to be done once.
-
-1. Navigate to https://github.com/eScience-course/escience2022-template
-2. Click the "Use this template" button
-3. Name your work group's project 
-4. Provide a brief description
-5. Tell your teammates where to find your repository and tell them to "Fork" the project.
-
-Once the initial setup is done, everyone will want to clone the repository onto the compute system they plan to use for the hackathon.
+### Git
 
 1. Open a JupyterLab session on the system you plan to use.  
 https://pangeo-eosc.vm.fedcloud.eu/jupyterhub/
-1. Click the github extension and pull the cloned repository! 
+
+1. Generate ssh key on pangeo jupyterhub with terminal and add it to your github account :
+[Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+
+2. Clone with github extension using ssh : git@github.com:eScience-course/Tjaernoe2022-group4.git
+
 1. Now you are ready to work ;-) 
 
-It would be good to start by copying the https://github.com/pangeo-data/escience-2022/blob/main/tutorial/pangeo101/data_discovery.ipynb into your notebooks directory!
 
 
 
-### How to make your project citable
+
+#### Extra
+
+##### How to make your project citable
 
 [Zenodo](https://about.zenodo.org/) is a data archiving tool that can help make your project citable by assigning a DOI to the project's GitHub repository.
 
 Follow the guidelines here https://guides.github.com/activities/citable-code
 
 
-### How to create Research Object
+#### How to create Research Object
 
 Creating [Research Object](https://youtu.be/w39xvNrqTR8) increases significantly the FAIRness of your work. 
 
