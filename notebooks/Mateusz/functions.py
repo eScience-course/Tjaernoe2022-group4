@@ -31,7 +31,7 @@ def plot_sss_sat(sss):
     '''
         Plots the sea surface salinity from satellite data
     Args:
-        sss
+        sss    [DataArray]   :   An xarray contining data about the sea surface salinity
     '''
     sat_proj = ccrs.NorthPolarStereo()
     fig, ax = plt.subplots(figsize=(10,10),subplot_kw={'projection':sat_proj})
