@@ -5,25 +5,46 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cartopy
 import cartopy.crs as ccrs
+import s3fs
 
 # Files from https://digital.csic.es/handle/10261/219679
 
 
-def read_satellite_data_9D(start_year=2011, num_years=10):
+def _files(year, path=''):
+    '''
+        A function for finding all satellite files for a certain year and sorting the files
+    Args:
+        year    [int]   :   The year
+        path    [str]   :   Path to file
+    Returns:
+        files   [list]  :   A list with filenames for the given year, sorted by date
+    '''
+    s3 = s3fs.S3FileSystem(key="K1CQ7M1DMTLUFK182APD", secret="3JuZAQm5I03jtpijCpHOdkAsJDNLNfZxBpM15Pi0", client_kwargs=dict(endpoint_url="https://rgw.met.no"))
+    files = []
+    for file in s3.ls(f'{path}{year}/'):
+        files.append(file)
+        
+    files.sort()
+    return files
+
+def read_satellite_data(start_year=2011, num_years=10, path=''):
     '''
         Function to read in satellite data
     Args:
         start_year  [int]   :   first year of data
         num_years   [int]   :   number of years in the data, default 10
+        path        [str]   :   Path to file
     Returns:
         file_dict   [dict]  :   a dictionary containing the files
     '''
-    years = np.array([start_year+i for i in range(num_years-1)])
+    years = np.array([start_year+i for i in range(num_years)])
     file_dict = {}
+        
     for year in years:
         file_dict[year] = {}
-        for i, file in enumerate(os.listdir(f'09D/{str(year)}')):
-            file_dict[year][i] = f'09D/{str(year)}/{file}'
+        files = _files(year, path)
+        for i, file in enumerate(files):
+            file_dict[year][i] = f's3://{file}'
         
     return file_dict
 
@@ -45,8 +66,10 @@ def plot_sss_sat(sss):
         levels=10,
         )
     ax.gridlines(draw_labels=True)
+    ax.coastlines()
     fig.tight_layout()
 
 if __name__ == '__main__':
-    a = read_satelite_data_9D(num_years=2)
-    print(a[2011][1])
+    path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
+    a = read_satellite_data(num_years=2, path=path)
+    
