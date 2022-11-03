@@ -48,11 +48,12 @@ def read_satellite_data(start_year=2011, num_years=10, path=''):
         
     return file_dict
 
-def plot_sss_sat(sss):
+def plot_sss_sat(sss, levels=10):
     '''
         Plots the sea surface salinity from satellite data
     Args:
         sss    [DataArray]   :   An xarray contining data about the sea surface salinity
+        levels [int]         :   Levels in the plot
     '''
     sat_proj = ccrs.NorthPolarStereo()
     fig, ax = plt.subplots(figsize=(10,10),subplot_kw={'projection':sat_proj})
@@ -62,14 +63,15 @@ def plot_sss_sat(sss):
             'orientation':'vertical',
             'shrink':.8
             },
-        transform=sat_proj,
-        levels=10,
+        transform=ccrs.epsg(6931),
+        levels=levels,
         )
+    ax.set_extent([-180, 180, 90, 50], ccrs.PlateCarree())
     ax.gridlines(draw_labels=True)
     ax.coastlines()
+    ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
     fig.tight_layout()
 
 if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
     a = read_satellite_data(num_years=2, path=path)
-    
