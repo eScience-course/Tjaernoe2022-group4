@@ -39,13 +39,13 @@ def read_satellite_data(start_year=2011, num_years=10, path=''):
     '''
     years = np.array([start_year+i for i in range(num_years)])
     file_dict = {}
-        
+    
     for year in years:
-        file_dict[year] = {}
+        file_dict[year] = []
         files = _files(year, path)
-        for i, file in enumerate(files):
-            file_dict[year][i] = f's3://{file}'
-        
+        for file in files:
+            file_dict[year].append(f's3://{file}')
+            
     return file_dict
 
 def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
@@ -77,6 +77,14 @@ def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
     ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
     fig.tight_layout()
 
+def create_xr(file):
+    s3 = s3fs.S3FileSystem(key="K1CQ7M1DMTLUFK182APD", secret="3JuZAQm5I03jtpijCpHOdkAsJDNLNfZxBpM15Pi0", client_kwargs=dict(endpoint_url="https://rgw.met.no"))
+    tmp = xr.open_dataset(s3.open(file)).squeeze()
+    tmp['x'] = tmp['x']*1000
+    tmp['y'] = tmp['y']*1000
+    return tmp
+
 if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
     a = read_satellite_data(num_years=2, path=path)
+    print(a[2011][0])
