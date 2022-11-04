@@ -68,8 +68,9 @@ def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
             },
         transform=ccrs.epsg(6931),
         levels=levels,
-        vmin=vmin,
-        vmax=vmax
+        #vmin=vmin,
+        #vmax=vmax
+        robust=True
         )
     ax.set_extent(extent, ccrs.PlateCarree())
     ax.gridlines(draw_labels=True)
@@ -79,9 +80,15 @@ def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
 
 def create_xr(file):
     s3 = s3fs.S3FileSystem(key="K1CQ7M1DMTLUFK182APD", secret="3JuZAQm5I03jtpijCpHOdkAsJDNLNfZxBpM15Pi0", client_kwargs=dict(endpoint_url="https://rgw.met.no"))
-    tmp = xr.open_dataset(s3.open(file)).squeeze()
-    tmp['x'] = tmp['x']*1000
-    tmp['y'] = tmp['y']*1000
+    tmp = xr.open_dataset(s3.open(file), drop_variables=['sss_error', 'sss_anomaly', 'sss_flag']).squeeze()
+    if tmp['x'].attrs['units']=='km':
+       tmp['x'] = tmp['x']*1000
+       tmp['x'].attrs['units'] = 'm'
+    if tmp['y'].attrs['units']=='km':
+       tmp['y'] = tmp['y']*1000
+       tmp['y'].attrs['units'] = 'm'
+    #tmp['x'] = tmp['x']*1000
+    #tmp['y'] = tmp['y']*1000
     return tmp
 
 if __name__ == '__main__':
