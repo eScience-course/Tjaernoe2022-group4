@@ -48,12 +48,15 @@ def read_satellite_data(start_year=2011, num_years=10, path=''):
         
     return file_dict
 
-def plot_sss_sat(sss, levels=10):
+def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
     '''
         Plots the sea surface salinity from satellite data
     Args:
         sss    [DataArray]   :   An xarray contining data about the sea surface salinity
         levels [int]         :   Levels in the plot
+        extent [list]        :   A list of the extent of the plot
+        vmin   [float]       :   Minimum value to show
+        vmax   [float]       :   Maximum value to show
     '''
     sat_proj = ccrs.NorthPolarStereo()
     fig, ax = plt.subplots(figsize=(10,10),subplot_kw={'projection':sat_proj})
@@ -65,8 +68,10 @@ def plot_sss_sat(sss, levels=10):
             },
         transform=ccrs.epsg(6931),
         levels=levels,
+        vmin=vmin,
+        vmax=vmax
         )
-    ax.set_extent([-180, 180, 90, 50], ccrs.PlateCarree())
+    ax.set_extent(extent, ccrs.PlateCarree())
     ax.gridlines(draw_labels=True)
     ax.coastlines()
     ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
