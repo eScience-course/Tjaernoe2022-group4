@@ -77,8 +77,24 @@ def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
     ax.coastlines()
     ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
     fig.tight_layout()
+    
+def plot_argo_positions(data, extent=[-180,180,90,65]):
+    '''
+        Function for plotting the positions of ARGO profiles
+    Args:
+        data       [DataArray]  :  The dataset which contains the positions of the profiles
+        extent     [list]       :  A list of the extent of the plot
+    '''
+    fig, ax = plt.subplots(figsize=(10,10), subplot_kw={'projection': ccrs.NorthPolarStereo()})
+    plt.scatter(data['LONGITUDE'], data['LATITUDE'], transform=ccrs.PlateCarree())
+    ax.gridlines(draw_labels=True)
+    ax.coastlines()
+    ax.set_extent(extent, ccrs.PlateCarree())
+    ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
+    fig.tight_layout()
 
 def create_xr(file):
+    
     s3 = s3fs.S3FileSystem(key="K1CQ7M1DMTLUFK182APD", secret="3JuZAQm5I03jtpijCpHOdkAsJDNLNfZxBpM15Pi0", client_kwargs=dict(endpoint_url="https://rgw.met.no"))
     tmp = xr.open_dataset(s3.open(file), drop_variables=['sss_error', 'sss_anomaly', 'sss_flag']).squeeze()
     if tmp['x'].attrs['units']=='km':
