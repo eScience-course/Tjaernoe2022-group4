@@ -94,7 +94,13 @@ def plot_argo_positions(data, extent=[-180,180,90,65]):
     fig.tight_layout()
 
 def create_xr(file):
-    
+    '''
+        Function for creating a single xarray dataset
+    Args:
+        file   [str]        :   Complete path to the file
+    Returns:
+        tmp    [DataArray]  :   The xarray dataset
+    '''
     s3 = s3fs.S3FileSystem(key="K1CQ7M1DMTLUFK182APD", secret="3JuZAQm5I03jtpijCpHOdkAsJDNLNfZxBpM15Pi0", client_kwargs=dict(endpoint_url="https://rgw.met.no"))
     tmp = xr.open_dataset(s3.open(file), drop_variables=['sss_error', 'sss_anomaly', 'sss_flag']).squeeze()
     if tmp['x'].attrs['units']=='km':
@@ -103,9 +109,29 @@ def create_xr(file):
     if tmp['y'].attrs['units']=='km':
        tmp['y'] = tmp['y']*1000
        tmp['y'].attrs['units'] = 'm'
-    #tmp['x'] = tmp['x']*1000
-    #tmp['y'] = tmp['y']*1000
     return tmp
+
+def slicing_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180, max_lon=180, min_lat=-90, max_lat=90):
+    '''
+        Function for slicing data by time, lon and lat
+    Args:
+        data       [DataArray]  :  The dataset to be sliced
+        min_time   [str]        :  A string representing the earliest date
+        max_time   [str]        :  A string representing the latest date
+        min_lon    [float]      :  The smallest longitude
+        max_lon    [float]      :  The largest longitude
+        min_lat    [float]      :  The smallest latitude
+        max_lat    [float]      :  The largest latitude
+    '''
+    ndata = data.where(
+        (data['time'] > np.datetime64(min_time))
+        & (data['time'] < np.datetime64(max_time)) 
+        & (data['lon'] > min_lon)
+        & (data['lon'] < max_lon)
+        & (data['lat'] < min_lat)
+        & (data['lat'] > max_lat),
+        drop=True)
+    return ndata
 
 if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
