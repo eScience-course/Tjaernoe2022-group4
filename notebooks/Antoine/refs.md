@@ -12,3 +12,10 @@ https://doi.org/10.1002/gbc.20055
 
 
 Mixed layer depth (MLD) was obtained from the monthly isopycnal/mixed-layer ocean climatology (MIMOC; http://www.pmel.noaa.gov/mimoc/) with 0.5°x0.5° resolution 
+
+
+import matplotlib.dates as mdates
+for a in axClair:
+	date_form = mdates.DateFormatter("%d")
+	a.xaxis.set_major_formatter(date_form)
+	a.xaxis.set_major_locator(mdates.DayLocator(interval=1))
