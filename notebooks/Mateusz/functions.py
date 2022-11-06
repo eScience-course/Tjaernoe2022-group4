@@ -111,7 +111,7 @@ def create_xr(file):
        tmp['y'].attrs['units'] = 'm'
     return tmp
 
-def slicing_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180, max_lon=180, min_lat=-90, max_lat=90):
+def slice_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180, max_lon=180, min_lat=-90, max_lat=90):
     '''
         Function for slicing data by time, lon and lat
     Args:
@@ -122,6 +122,8 @@ def slicing_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-18
         max_lon    [float]      :  The largest longitude
         min_lat    [float]      :  The smallest latitude
         max_lat    [float]      :  The largest latitude
+    Returns:
+        ndata      [DataArray]  :  A sliced DataArray
     '''
     ndata = data.where(
         (data['time'] > np.datetime64(min_time))
