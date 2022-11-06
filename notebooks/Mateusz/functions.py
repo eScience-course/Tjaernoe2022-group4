@@ -6,10 +6,27 @@ import matplotlib.pyplot as plt
 import cartopy
 import cartopy.crs as ccrs
 import s3fs
+from joblib import Parallel, delayed
 
 # Files from https://digital.csic.es/handle/10261/219679
 
-
+def collect_satellite_data(years=[2011,2012,2013,2014,2015,2016,2017,2018,2019], path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'):
+    '''
+        Function for collecting satellite data into one DataArray
+    Args:
+        years    [list]       :   A list of years included
+        path     [str]        :   path to the files containing the data
+    returns:
+        sat_data [DataArray]  :   A DataArray containing all the data.
+    '''
+    sat_files = _read_satellite_data(num_years=len(years), path=path)
+    tmp = []
+    for year in years:
+        tmp.append(xr.concat(Parallel(n_jobs=16)(delayed(create_xr)(file) for file in sat_files[year]), dim='time'))
+    sat_data = xr.concat(tmp, dim='time')
+    del(tmp)
+    return sat_data
+    
 def _files(year, path=''):
     '''
         A function for finding all satellite files for a certain year and sorting the files
@@ -27,7 +44,7 @@ def _files(year, path=''):
     files.sort()
     return files
 
-def read_satellite_data(start_year=2011, num_years=10, path=''):
+def _read_satellite_data(start_year=2011, num_years=10, path=''):
     '''
         Function to read in satellite data
     Args:
