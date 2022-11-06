@@ -130,8 +130,8 @@ def slice_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180,
         & (data['time'] < np.datetime64(max_time)) 
         & (data['lon'] > min_lon)
         & (data['lon'] < max_lon)
-        & (data['lat'] < min_lat)
-        & (data['lat'] > max_lat),
+        & (data['lat'] > min_lat)
+        & (data['lat'] < max_lat),
         drop=True)
     return ndata
 
