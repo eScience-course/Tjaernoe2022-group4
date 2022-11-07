@@ -58,3 +58,14 @@ def pltNPS(var):
     ax.gridlines(draw_labels=True)
     ax.coastlines()
     fig.tight_layout()
+    
+    
+    
+def rect(ax, lola):
+    ### rectangle
+    lo1,lo2, la1,la2 = lola
+    N=10
+    ax.plot(np.linspace(lo1,lo2,N), la1*np.ones(N), 'k--', transform=ccrs.PlateCarree())
+    ax.plot(np.linspace(lo1,lo2,N), la2*np.ones(N), 'k--', transform=ccrs.PlateCarree())
+    ax.plot(lo1*np.ones(N), np.linspace(la1,la2,N), 'k--', transform=ccrs.PlateCarree())
+    ax.plot(lo2*np.ones(N), np.linspace(la1,la2,N), 'k--', transform=ccrs.PlateCarree())
