@@ -128,6 +128,40 @@ def create_xr(file):
        tmp['y'].attrs['units'] = 'm'
     return tmp
 
+def ConvertModelGrid(_ds):
+    """
+    convert longitude from 0-360 to -180 -- 180 deg
+    """
+
+    if 'i' in _ds.coords:
+        _ds = _ds.rename({'i': 'lon'})
+    if 'j' in _ds.coords:
+        _ds = _ds.rename({'j': 'lat'})
+    
+    if _ds['lon'].attrs['units']=='1':
+       _ds['lon'] = _ds['lon']*360/(len(_ds['lon']))
+       _ds['lon'].attrs['units'] = 'degrees east'
+    if _ds['lat'].attrs['units']=='1':
+       _ds['lat'] = _ds['lat']*180/(len(_ds['lat']))
+       _ds['lat'].attrs['units'] = 'degrees north'
+    
+    # check if already 
+    
+    attrs = _ds['lon'].attrs
+    if _ds['lon'].min() >= 0:
+        with xr.set_options(keep_attrs=True): 
+            _ds.coords['lon'] = (_ds['lon'] + 260) % 360 - 180
+        _ds = _ds.sortby('lon')
+    
+    attrs = _ds['lat'].attrs
+    if _ds['lat'].min() >= 0:
+        with xr.set_options(keep_attrs=True):
+            _ds.coords['lat'] = (_ds['lat'] + 90) % 180 - 90 
+        _ds = _ds.sortby('lat')
+    
+    return _ds
+
+
 def slice_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180, max_lon=180, min_lat=-90, max_lat=90):
     '''
         Function for slicing data by time, lon and lat
@@ -156,3 +190,50 @@ if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
     a = read_satellite_data(num_years=2, path=path)
     print(a[2011][0])
+    
+"""
+def MaskLand(_ds):
+    try: 
+        lons = _ds['lon']
+        lats = _ds['lat']
+    except:
+        lons = _ds['i']
+        lats = _ds['j']
+    
+    fig, ax = plt.subplots(figsize=(len(lons), len(lats)), dpi=1, subplot_kw={'projection': ccrs.PlateCarree()})
+    fig.subplots_adjust(left=0.0, bottom=0.0, right=1.0, top=1.0)
+    ax.set_frame_on(False)
+    ax.add_feature(cartopy.feature.LAND, facecolor='black')
+    fig.canvas.draw()
+    mask = fig.canvas.tostring_rgb()
+    plt.show()
+    ncols, nrows = fig.canvas.get_width_height()
+    print(ncols, nrows)
+    plt.close(fig)
+    mask = np.frombuffer(mask, dtype=np.uint8).reshape(nrows, ncols, 3)
+    mask = mask.mean(axis=2)
+    mask = xr.DataArray(mask[::-1,::], coords={'i':_ds['i'], 'j':_ds['j']}, dims=_ds.dims, attrs=_ds.attrs)
+    _ds = _ds.where((mask > 0), np.nan)
+    return mask
+    
+    
+    
+dset1 = dset.sel(time='2010-10').sel(bnds=0).sel(lev=1, method='nearest').sel(vertices=0).squeeze()
+cutted = dset1
+#cutted = dset1.where(
+#    (dset1['latitude'] > 50) &
+#    (dset1['latitude'] < 80),
+#    drop=True)
+print(dset1.coords)
+print(masked.coords)
+masked.plot.pcolormesh()
+plt.show()
+#masked
+#cutted['so'].plot.pcolormesh()
+fig, ax = plt.subplots(figsize=(10,10)) #subplot_kw={'projection':ccrs.Robinson()})
+plt.contourf(cutted['longitude'], cutted['latitude'], cutted['so'])# transform=ccrs.PlateCarree())
+#ax.coastlines()
+plt.colorbar()
+#ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
+#ax.gridlines(draw_labels=True)
+"""
