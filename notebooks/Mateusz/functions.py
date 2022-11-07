@@ -176,21 +176,43 @@ def slice_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180,
     Returns:
         ndata      [DataArray]  :  A sliced DataArray
     '''
-    ndata = data.where(
-        (data['time'] > np.datetime64(min_time))
-        & (data['time'] < np.datetime64(max_time)) 
-        & (data['lon'] > min_lon)
-        & (data['lon'] < max_lon)
-        & (data['lat'] > min_lat)
-        & (data['lat'] < max_lat),
-        drop=True)
+    try:
+        ndata = data.where(
+            (data['time'] > np.datetime64(min_time))
+            & (data['time'] < np.datetime64(max_time)) 
+            & (data['lon'] > min_lon)
+            & (data['lon'] < max_lon)
+            & (data['lat'] > min_lat)
+            & (data['lat'] < max_lat),
+            drop=True)
+    except:
+        ndata = data.where(
+            (data['longitude'] > min_lon)
+            & (data['longitude'] < max_lon)
+            & (data['latitude'] > min_lat)
+            & (data['latitude'] < max_lat),
+            drop=True)
     return ndata
+
+def PlotModel(data, extent=[-180,180,90,50]):
+    fig, ax = plt.subplots(figsize=(10,10), subplot_kw={'projection':ccrs.NorthPolarStereo()})
+    plt.pcolormesh(
+        data['longitude'],
+        data['latitude'],
+        data['so'],
+        transform=ccrs.PlateCarree()
+        )
+    ax.set_extent(extent, ccrs.PlateCarree())
+    plt.colorbar()
+    ax.gridlines(draw_labels=True)
+    ax.coastlines()
+    fig.tight_layout()
 
 if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
     a = read_satellite_data(num_years=2, path=path)
     print(a[2011][0])
-    
+
 """
 def MaskLand(_ds):
     try: 
