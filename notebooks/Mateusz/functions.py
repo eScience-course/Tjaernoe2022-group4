@@ -207,55 +207,41 @@ def PlotModel(data, extent=[-180,180,90,50]):
     ax.gridlines(draw_labels=True)
     ax.coastlines()
     fig.tight_layout()
+    
+def PlotSeasonality(ds, ac):
+    #total_area = np.sum(ac.areacello)
+    mean = ds['so'].groupby('time.month').mean('time').mean('i').mean('j').compute()
+    std = ds['so'].groupby('time.month').std('time').std('i').std('j')
+    #print(std)
+    t = ds['so'].mean('i').mean('j').compute().groupby('time.month')
+    month = ds['time.month']
+    years = np.arange(1950,2015,1)
+    x = np.arange(1,13,1)
 
+    fig, ax = plt.subplots()
+    max_ = []
+    min_ = []
+    for month in t.groups.keys():
+        max_.append(np.max(t[month]))
+        min_.append(np.min(t[month]))
+    ax.fill_between(x, min_, max_, color='seashell')
+    for month in t.groups.keys():
+        m = np.full(len(t[month]), month)
+        plt.scatter(m, t[month], color='peachpuff')
+    plt.plot(x, mean, 'cadetblue', lw=5)
+    plt.plot(x, mean-std)
+    plt.plot(x, mean+std)
+    plt.grid()
+    ticks = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+    dic = { 1:'Jan', 2:'Feb', 3:'Mar', 4:'Apr', 5:'May', 6:'Jun', 7:'Jul', 8:'Aug', 9:'Sep', 10:'Oct', 11:'Nov', 12:'Dec'}
+    labels = [ticks[i] if t not in dic.keys() else dic[t] for i,t in enumerate(ticks)]
+    ax.set_xticks(ticks)
+    ax.set_xticklabels(labels)
+    plt.title(f'Seasonality of Ocean Salinity at {ds.lev:.2f}m depth')
+    plt.show()
+    
 if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
     a = read_satellite_data(num_years=2, path=path)
     print(a[2011][0])
-
-"""
-def MaskLand(_ds):
-    try: 
-        lons = _ds['lon']
-        lats = _ds['lat']
-    except:
-        lons = _ds['i']
-        lats = _ds['j']
-    
-    fig, ax = plt.subplots(figsize=(len(lons), len(lats)), dpi=1, subplot_kw={'projection': ccrs.PlateCarree()})
-    fig.subplots_adjust(left=0.0, bottom=0.0, right=1.0, top=1.0)
-    ax.set_frame_on(False)
-    ax.add_feature(cartopy.feature.LAND, facecolor='black')
-    fig.canvas.draw()
-    mask = fig.canvas.tostring_rgb()
-    plt.show()
-    ncols, nrows = fig.canvas.get_width_height()
-    print(ncols, nrows)
-    plt.close(fig)
-    mask = np.frombuffer(mask, dtype=np.uint8).reshape(nrows, ncols, 3)
-    mask = mask.mean(axis=2)
-    mask = xr.DataArray(mask[::-1,::], coords={'i':_ds['i'], 'j':_ds['j']}, dims=_ds.dims, attrs=_ds.attrs)
-    _ds = _ds.where((mask > 0), np.nan)
-    return mask
-    
-    
-    
-dset1 = dset.sel(time='2010-10').sel(bnds=0).sel(lev=1, method='nearest').sel(vertices=0).squeeze()
-cutted = dset1
-#cutted = dset1.where(
-#    (dset1['latitude'] > 50) &
-#    (dset1['latitude'] < 80),
-#    drop=True)
-print(dset1.coords)
-print(masked.coords)
-masked.plot.pcolormesh()
-plt.show()
-#masked
-#cutted['so'].plot.pcolormesh()
-fig, ax = plt.subplots(figsize=(10,10)) #subplot_kw={'projection':ccrs.Robinson()})
-plt.contourf(cutted['longitude'], cutted['latitude'], cutted['so'])# transform=ccrs.PlateCarree())
-#ax.coastlines()
-plt.colorbar()
-#ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
-#ax.gridlines(draw_labels=True)
-"""
