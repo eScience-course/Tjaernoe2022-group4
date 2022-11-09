@@ -208,12 +208,13 @@ def PlotModel(data, extent=[-180,180,90,50]):
     ax.coastlines()
     fig.tight_layout()
     
-def PlotSeasonality(ds, ac):
+def PlotSeasonality(ds):
     #total_area = np.sum(ac.areacello)
-    mean = ds['so'].groupby('time.month').mean('time').mean('i').mean('j').compute()
-    std = ds['so'].groupby('time.month').std('time').std('i').std('j')
+    mean = ds.groupby('time.month').mean('time').mean('i').mean('j').compute()
+    print(mean)
+    std = ds.groupby('time.month').std('time').std('i').std('j')
     #print(std)
-    t = ds['so'].mean('i').mean('j').compute().groupby('time.month')
+    t = ds.mean('i').mean('j').compute().groupby('time.month')
     month = ds['time.month']
     years = np.arange(1950,2015,1)
     x = np.arange(1,13,1)
@@ -221,16 +222,16 @@ def PlotSeasonality(ds, ac):
     fig, ax = plt.subplots()
     max_ = []
     min_ = []
-    for month in t.groups.keys():
-        max_.append(np.max(t[month]))
-        min_.append(np.min(t[month]))
-    ax.fill_between(x, min_, max_, color='seashell')
-    for month in t.groups.keys():
-        m = np.full(len(t[month]), month)
-        plt.scatter(m, t[month], color='peachpuff')
+    #for month in t.groups.keys():
+    #    max_.append(np.max(t[month]))
+    #    min_.append(np.min(t[month]))
+    #ax.fill_between(x, min_, max_, color='seashell')
+    #for month in t.groups.keys():
+        #m = np.full(len(t[month]), month)
+        #plt.scatter(m, t[month], color='peachpuff')
     plt.plot(x, mean, 'cadetblue', lw=5)
-    plt.plot(x, mean-std)
-    plt.plot(x, mean+std)
+    #plt.plot(x, mean-std)
+    #plt.plot(x, mean+std)
     plt.grid()
     ticks = [1,2,3,4,5,6,7,8,9,10,11,12]
 
