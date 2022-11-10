@@ -65,7 +65,7 @@ def _read_satellite_data(start_year=2011, num_years=10, path=''):
             
     return file_dict
 
-def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
+def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], title=None):
     '''
         Plots the sea surface salinity from satellite data
     Args:
@@ -75,20 +75,22 @@ def plot_sss_sat(sss, levels=10, extent=[-180,180,90,50], vmin=20, vmax=40):
         vmin   [float]       :   Minimum value to show
         vmax   [float]       :   Maximum value to show
     '''
+    ttl = f'{title} \n{str(sss.time.values)[0:10]}'
     sat_proj = ccrs.NorthPolarStereo()
-    fig, ax = plt.subplots(figsize=(10,10),subplot_kw={'projection':sat_proj})
+    fig, ax = plt.subplots(figsize=(5,5), dpi=150, subplot_kw={'projection':sat_proj})
     sss.plot.pcolormesh(
         ax = ax,
         cbar_kwargs={
             'orientation':'vertical',
-            'shrink':.8
+            'shrink':.8,
+            'label': 'Sea Surface Salinity [psu]'
             },
         transform=ccrs.epsg(6931),
         levels=levels,
-        #vmin=vmin,
-        #vmax=vmax
-        robust=True
+        robust=True,
+        cmap='RdYlGn'
         )
+    plt.title(ttl)
     ax.set_extent(extent, ccrs.PlateCarree())
     ax.gridlines(draw_labels=True)
     ax.coastlines()
@@ -161,6 +163,9 @@ def ConvertModelGrid(_ds):
     
     return _ds
 
+def WeightedMean(ds,ac):
+    RegionMean = ((ds * ac['areacello']).sum(dim=['i','j'])/ac['areacello'].sum()).compute()
+    return RegionMean
 
 def slice_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180, max_lon=180, min_lat=-90, max_lat=90):
     '''
