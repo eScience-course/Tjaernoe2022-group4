@@ -7,8 +7,89 @@ import cartopy
 import cartopy.crs as ccrs
 import s3fs
 from joblib import Parallel, delayed
+from ipywidgets import interactive, interact
 
 # Files from https://digital.csic.es/handle/10261/219679
+def interactive_plot_whole_region(ds, title):
+    times = np.arange(365)
+
+    def g(time=250):
+        
+        ttl = f'{title} \n{str(ds.sss[time].time.values)[0:10]}'
+        sat_proj = ccrs.NorthPolarStereo()
+        fig, ax = plt.subplots(figsize=(5,5), dpi=150, subplot_kw={'projection':sat_proj})
+        ds['sss'][time].plot.pcolormesh(
+            ax = ax,
+            cbar_kwargs={
+                'orientation':'vertical',
+                'shrink':.8,
+                'label': 'Sea Surface Salinity [psu]'
+                },
+            transform=ccrs.epsg(6931),
+            robust=True,
+            cmap='RdYlGn'
+            )
+        plt.title(ttl)
+        ax.set_extent([-180,180,90,50], ccrs.PlateCarree())
+        ax.gridlines(draw_labels=True)
+        ax.coastlines()
+        ax.add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
+        ax.add_feature(cartopy.feature.RIVERS, zorder=1, edgecolor='blue')
+        fig.tight_layout()
+        plt.show()
+
+    interactive_plot = interact(g, time=times)
+    interactive_plot
+    
+def interactive_plot(SatRegion1, SatRegion2):
+    times = np.arange(365)
+
+    def g(time=250):
+        fig, axs = plt.subplots(1,2,figsize=(10,5), dpi=150, subplot_kw={'projection':ccrs.NorthPolarStereo()})
+
+        SatRegion1['sss'][time].plot.pcolormesh(
+            ax=axs[0],
+            cbar_kwargs={
+                'orientation':'vertical',
+                'shrink':.8,
+                'label': 'Sea Surface Salinity [psu]'
+                },
+            transform=ccrs.epsg(6931),
+            vmin=15,
+            vmax=35,
+            cmap='RdYlGn')
+
+        SatRegion2['sss'][time].plot.pcolormesh(
+            ax=axs[1],
+            cbar_kwargs={
+                'orientation':'vertical',
+                'shrink':.8,
+                'label': 'Sea Surface Salinity [psu]'
+                },
+            transform=ccrs.epsg(6931),
+            vmin=15,
+            vmax=35,
+            cmap='RdYlGn')
+
+        axs[0].set_extent([-20,20,67,85], ccrs.PlateCarree())
+        axs[1].set_extent([82,180,70,85], ccrs.PlateCarree())
+        axs[0].gridlines(draw_labels=True)
+        axs[1].gridlines(draw_labels=True)
+        axs[0].coastlines()
+        axs[0].add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
+        axs[1].coastlines()
+        axs[1].add_feature(cartopy.feature.LAND, zorder=1, edgecolor='black')
+        axs[0].add_feature(cartopy.feature.RIVERS, zorder=1, edgecolor='blue')
+        axs[1].add_feature(cartopy.feature.RIVERS, zorder=1, edgecolor='blue')
+        time1 = f'{str(SatRegion1.sss[time].time.values)[0:10]}'
+        time2 = f'{str(SatRegion2.sss[time].time.values)[0:10]}'
+        axs[0].set_title(f'Sea Surface Salinity Greenland Sea \n{time1}')
+        axs[1].set_title(f'Sea Surface Salinity Laptev Sea \n{time2}')
+        plt.tight_layout()
+        plt.show()
+
+    interactive_plot = interact(g, time=times)
+    interactive_plot
 
 def collect_satellite_data(years=[2011,2012,2013,2014,2015,2016,2017,2018,2019], path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'):
     '''
