@@ -211,41 +211,11 @@ def create_xr(file):
        tmp['y'].attrs['units'] = 'm'
     return tmp
 
-def ConvertModelGrid(_ds):
-    """
-    convert longitude from 0-360 to -180 -- 180 deg
-    """
-
-    if 'i' in _ds.coords:
-        _ds = _ds.rename({'i': 'lon'})
-    if 'j' in _ds.coords:
-        _ds = _ds.rename({'j': 'lat'})
-    
-    if _ds['lon'].attrs['units']=='1':
-       _ds['lon'] = _ds['lon']*360/(len(_ds['lon']))
-       _ds['lon'].attrs['units'] = 'degrees east'
-    if _ds['lat'].attrs['units']=='1':
-       _ds['lat'] = _ds['lat']*180/(len(_ds['lat']))
-       _ds['lat'].attrs['units'] = 'degrees north'
-    
-    # check if already 
-    
-    attrs = _ds['lon'].attrs
-    if _ds['lon'].min() >= 0:
-        with xr.set_options(keep_attrs=True): 
-            _ds.coords['lon'] = (_ds['lon'] + 260) % 360 - 180
-        _ds = _ds.sortby('lon')
-    
-    attrs = _ds['lat'].attrs
-    if _ds['lat'].min() >= 0:
-        with xr.set_options(keep_attrs=True):
-            _ds.coords['lat'] = (_ds['lat'] + 90) % 180 - 90 
-        _ds = _ds.sortby('lat')
-    
-    return _ds
-
 def WeightedMean(ds,ac):
-    RegionMean = ((ds * ac['areacello']).sum(dim=['i','j'])/ac['areacello'].sum()).compute()
+    try:
+        RegionMean = ((ds * ac['areacello']).sum(dim=['i','j'])/ac['areacello'].sum()).compute()
+    except: 
+        RegionMean = ((ds * ac['areacello']).sum(dim=['x','y'])/ac['areacello'].sum()).compute()
     return RegionMean
 
 def slice_data(data, min_time='1950-01-01', max_time='2022-06-01', min_lon=-180, max_lon=180, min_lat=-90, max_lat=90):
@@ -327,7 +297,7 @@ def PlotSeasonality(ds):
     ax.set_xticklabels(labels)
     plt.title(f'Seasonality of Ocean Salinity at {ds.lev:.2f}m depth')
     plt.show()
-    
+
 if __name__ == '__main__':
     path='escience2022/Antoine/ESA_SMOS_Arctic_Sea_Surface_Salinity/'
     a = read_satellite_data(num_years=2, path=path)
