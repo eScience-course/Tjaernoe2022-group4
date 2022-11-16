@@ -11,6 +11,12 @@ from ipywidgets import interactive, interact
 
 # Files from https://digital.csic.es/handle/10261/219679
 def interactive_plot_whole_region(ds, title):
+    '''
+        Function for creating an interactive plot of the whole region
+    Args:
+        ds    [DataArray] : DataArray containing salinity data
+        title [str]       : A string to be used as figure title
+    '''
     times = np.arange(365)
 
     def g(time=250):
@@ -42,6 +48,12 @@ def interactive_plot_whole_region(ds, title):
     interactive_plot
     
 def interactive_plot(SatRegion1, SatRegion2):
+    '''
+        A function which creates an interactive plot of the two regions
+    Args:
+        SatRegion1   [DataArray] : DataArray containing salinity data for the first region
+        SatRegion2   [DataArray] : DataArray containing salinity data for the second region
+    '''
     times = np.arange(365)
 
     def g(time=250):
